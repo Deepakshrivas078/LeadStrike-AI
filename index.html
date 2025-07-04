@@ -1,37 +1,45 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>LeadStrike Login</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LeadStrike AI</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <img src="logo.png" alt="LeadStrike Logo" class="logo" />
+  <header>
+    <h1>🚀 Welcome to LeadStrike AI</h1>
+    <p>Your multilingual AI tool to extract business data from any query!</p>
+  </header>
 
-    <!-- Login Form -->
-    <div id="login-box">
-      <h2>Login</h2>
-      <input type="email" id="login-email" placeholder="Email" />
-      <input type="password" id="login-password" placeholder="Password" />
-      <button id="login-btn">Login</button>
-      <p>Don't have an account? <a href="#" id="show-signup">Create one</a></p>
-      <p id="login-error" class="error"></p>
-    </div>
+  <main>
+    <section class="features">
+      <h2>What You Can Do</h2>
+      <ul>
+        <li>🌍 Ask queries in any language</li>
+        <li>📧 Get business emails, contact, social links</li>
+        <li>📥 Download Excel (on paid plan)</li>
+      </ul>
+    </section>
 
-    <!-- Signup Form -->
-    <div id="signup-box" style="display: none;">
-      <h2>Create Account</h2>
-      <input type="email" id="signup-email" placeholder="Email" />
-      <input type="password" id="signup-password" placeholder="Password" />
-      <button id="signup-btn">Sign Up</button>
-      <p>Already have an account? <a href="#" id="show-login">Login here</a></p>
-      <p id="signup-error" class="error"></p>
-    </div>
-  </div>
+    <section class="pricing">
+      <h2>Pricing</h2>
+      <div class="price-box">
+        <h3>Free Plan</h3>
+        <p>✅ 1 search</p>
+        <p>❌ No download access</p>
+      </div>
+      <div class="price-box">
+        <h3>Paid Plan</h3>
+        <p>Unlimited access</p>
+        <p>$20/week or $49/month or $549 year</p>
+      </div>
+    </section>
 
-  <script src="firebase-config.js"></script>
-  <script src="script.js"></script>
+    <section class="cta">
+      <a href="login.html" class="login-button">Login to Get Started</a>
+    </section>
+  </main>
 </body>
 </html>
