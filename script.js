@@ -1,26 +1,40 @@
-// script.js
-import { collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { db } from "./firebase-config.js";
-
-async function handleSearch() {
-  const query = document.getElementById("queryInput").value;
-  const resultBox = document.getElementById("resultBox");
-
-  if (!query.trim()) {
-    resultBox.innerHTML = "<p>Please enter a query.</p>";
-    return;
-  }
-
-  // Save query to Firebase
-  try {
-    await addDoc(collection(db, "searchQueries"), {
-      query: query,
-      timestamp: new Date()
-    });
-
-    resultBox.innerHTML = `<p>Search saved: <b>${query}</b><br> (Result fetch system coming soon...)</p>`;
-  } catch (error) {
-    resultBox.innerHTML = `<p style="color:red;">Error saving query: ${error}</p>`;
-  }
+body {
+  font-family: Arial, sans-serif;
+  background-color: #111;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
+.container {
+  background: #222;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #0f0;
+  text-align: center;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 5px;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #0f0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  color: #000;
+  font-weight: bold;
+}
+
+a {
+  color: #0f0;
+  text-decoration: underline;
+}
