@@ -1,1 +1,1 @@
-# LeadStrike-AI.
+# LeadStrike-AI
