@@ -1,24 +1,34 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>LeadStrike AI - Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LeadStrike Login</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 </head>
 <body>
   <div class="container">
-    <!-- Logo -->
-    <img src="logo.png" alt="LeadStrike Logo" style="width: 120px; margin-bottom: 20px;" />
+    <img src="logo.png" alt="LeadStrike Logo" class="logo" />
 
-    <h2>LeadStrike AI Login</h2>
+    <!-- Login Form -->
+    <div id="login-box">
+      <h2>Login</h2>
+      <input type="email" id="login-email" placeholder="Email" />
+      <input type="password" id="login-password" placeholder="Password" />
+      <button id="login-btn">Login</button>
+      <p>Don't have an account? <a href="#" id="show-signup">Create one</a></p>
+      <p id="login-error" class="error"></p>
+    </div>
 
-    <input type="email" id="email" placeholder="Email" />
-    <input type="password" id="password" placeholder="Password" />
-    <button onclick="login()">Login</button>
-    <p>New user? <a href="#" onclick="signup()">Create account</a></p>
-    <p id="message"></p>
+    <!-- Signup Form -->
+    <div id="signup-box" style="display: none;">
+      <h2>Create Account</h2>
+      <input type="email" id="signup-email" placeholder="Email" />
+      <input type="password" id="signup-password" placeholder="Password" />
+      <button id="signup-btn">Sign Up</button>
+      <p>Already have an account? <a href="#" id="show-login">Login here</a></p>
+      <p id="signup-error" class="error"></p>
+    </div>
   </div>
 
   <script src="firebase-config.js"></script>
