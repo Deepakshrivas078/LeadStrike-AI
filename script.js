@@ -1,40 +1,26 @@
-body {
-  font-family: Arial, sans-serif;
-  background-color: #111;
-  color: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+function login() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  auth.signInWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      document.getElementById("message").innerText = "Login successful!";
+      // window.location.href = "dashboard.html"; // Future redirect
+    })
+    .catch((error) => {
+      document.getElementById("message").innerText = "Error: " + error.message;
+    });
 }
 
-.container {
-  background: #222;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px #0f0;
-  text-align: center;
-}
+function signup() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
 
-input {
-  width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-  border: none;
-  border-radius: 5px;
-}
-
-button {
-  padding: 10px 20px;
-  background-color: #0f0;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  color: #000;
-  font-weight: bold;
-}
-
-a {
-  color: #0f0;
-  text-decoration: underline;
+  auth.createUserWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      document.getElementById("message").innerText = "Account created!";
+    })
+    .catch((error) => {
+      document.getElementById("message").innerText = "Error: " + error.message;
+    });
 }
