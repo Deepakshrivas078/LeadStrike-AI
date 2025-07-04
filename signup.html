@@ -1,0 +1,110 @@
+<!-- signup.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign Up - LeadStrike AI</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #eef2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .signup-container {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 1.5rem;
+      color: #28a745;
+    }
+    input {
+      width: 100%;
+      padding: 0.8rem;
+      margin: 0.5rem 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    button {
+      background-color: #28a745;
+      color: white;
+      padding: 0.8rem;
+      width: 100%;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      margin-top: 1rem;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #1e7e34;
+    }
+    .switch-link {
+      margin-top: 1rem;
+      display: block;
+      color: #28a745;
+      text-decoration: none;
+    }
+    .error, .success {
+      margin-top: 1rem;
+      color: red;
+    }
+    .success {
+      color: green;
+    }
+  </style>
+</head>
+<body>
+  <div class="signup-container">
+    <h2>Create Account</h2>
+    <input type="email" id="signup-email" placeholder="Email" />
+    <input type="password" id="signup-password" placeholder="Password" />
+    <button onclick="signup()">Create Account</button>
+    <a class="switch-link" href="login.html">Back to Login</a>
+    <div id="message"></div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDlnrYQjxEm4KuIOfpRqWGCHviHeUeysIQ",
+      authDomain: "leadstrike-auth.firebaseapp.com",
+      projectId: "leadstrike-auth",
+      storageBucket: "leadstrike-auth.firebasestorage.app",
+      messagingSenderId: "334418603750",
+      appId: "1:334418603750:web:cba9e98cb23d07a5fe9527",
+      measurementId: "G-B8S3LX6LQ6"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    window.signup = async function() {
+      const email = document.getElementById('signup-email').value;
+      const password = document.getElementById('signup-password').value;
+      const messageDiv = document.getElementById('message');
+      try {
+        await createUserWithEmailAndPassword(auth, email, password);
+        messageDiv.innerHTML = "<p class='success'>Account created successfully ✅</p>";
+        setTimeout(() => window.location.href = "dashboard.html", 1000);
+      } catch (error) {
+        messageDiv.innerHTML = "<p class='error'>❌ " + error.message + "</p>";
+      }
+    }
+  </script>
+</body>
+</html>
