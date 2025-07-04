@@ -1,0 +1,112 @@
+<!-- dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard - LeadStrike AI</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to bottom right, #e0f0ff, #f5faff);
+      color: #333;
+    }
+    .navbar {
+      background-color: #007bff;
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .navbar h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+    .logout-btn {
+      background-color: white;
+      color: #007bff;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .logout-btn:hover {
+      background-color: #f0f0f0;
+    }
+    .content {
+      padding: 2rem;
+      text-align: center;
+    }
+    .card {
+      background: white;
+      padding: 2rem;
+      border-radius: 16px;
+      max-width: 600px;
+      margin: 2rem auto;
+      box-shadow: 0 6px 20px rgba(0, 123, 255, 0.1);
+    }
+    @media (max-width: 600px) {
+      .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .logout-btn {
+        margin-top: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <h1>LeadStrike AI</h1>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+
+  <div class="content">
+    <div class="card">
+      <h2>Welcome to Your Dashboard</h2>
+      <p id="userEmail">Loading...</p>
+      <hr />
+      <p><strong>🚧 LeadStrike Search Tool Coming Soon...</strong></p>
+      <p>You’ll be able to search businesses, jobs, and emails globally — all in your language.</p>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDlnrYQjxEm4KuIOfpRqWGCHviHeUeysIQ",
+      authDomain: "leadstrike-auth.firebaseapp.com",
+      projectId: "leadstrike-auth",
+      storageBucket: "leadstrike-auth.firebasestorage.app",
+      messagingSenderId: "334418603750",
+      appId: "1:334418603750:web:cba9e98cb23d07a5fe9527",
+      measurementId: "G-B8S3LX6LQ6"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const userEmail = document.getElementById("userEmail");
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        userEmail.textContent = `Logged in as: ${user.email}`;
+      } else {
+        window.location.href = "login.html";
+      }
+    });
+
+    window.logout = async function () {
+      await signOut(auth);
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
+</html>
