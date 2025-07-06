@@ -1,4 +1,3 @@
-<!-- dashboard.html (UPDATED with ENTER, one-time free, Pro badge, pricing link) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,7 +24,7 @@
       margin: 0;
       font-size: 1.5rem;
     }
-    .logout-btn {
+    .logout-btn, .pro-btn {
       background-color: white;
       color: #007bff;
       border: none;
@@ -33,8 +32,9 @@
       border-radius: 8px;
       cursor: pointer;
       font-weight: bold;
+      margin-left: 10px;
     }
-    .logout-btn:hover {
+    .logout-btn:hover, .pro-btn:hover {
       background-color: #f0f0f0;
     }
     .content {
@@ -62,51 +62,34 @@
     .search-btn:hover {
       background-color: #0056b3;
     }
-    .pro-badge {
-      display: inline-block;
-      background-color: gold;
-      color: black;
-      font-weight: bold;
-      padding: 0.25rem 0.75rem;
-      border-radius: 20px;
-      margin-top: 0.5rem;
-    }
-    .upgrade-link {
-      display: block;
-      margin-top: 1rem;
-      color: #007bff;
-      text-decoration: underline;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    @media (max-width: 600px) {
-      .navbar {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .logout-btn {
-        margin-top: 1rem;
-      }
+    input#searchInput {
+      padding: 12px;
+      width: 90%;
+      margin-top: 15px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
     }
   </style>
 </head>
 <body>
   <div class="navbar">
     <h1>LeadStrike AI</h1>
-    <button class="logout-btn" onclick="logout()">Logout</button>
+    <div>
+      <button class="pro-btn" onclick="goToPricing()">Go Pro 🚀</button>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
   </div>
 
   <div class="content">
     <div class="card">
       <h2>Welcome to Your Dashboard</h2>
       <p id="userEmail">Loading...</p>
-      <div id="planBadge"></div>
       <p id="remainingSearches">Checking limits...</p>
       <hr />
-      <p><strong>🚧 LeadStrike Search Tool Coming Soon...</strong></p>
-      <p>You’ll be able to search businesses, jobs, and emails globally — all in your language.</p>
+      <input id="searchInput" placeholder="Type your search here..." onkeypress="handleEnter(event)" />
+      <br/>
       <button class="search-btn" onclick="handleSearch()">Run Search</button>
-      <span class="upgrade-link" onclick="window.location.href='pricing.html'">Upgrade to Pro 🔥</span>
     </div>
   </div>
 
@@ -131,29 +114,24 @@
 
     const userEmail = document.getElementById("userEmail");
     const remainingSearches = document.getElementById("remainingSearches");
-    const planBadge = document.getElementById("planBadge");
 
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         const userRef = doc(db, "users", user.uid);
-        await setDoc(userRef, {
-          email: user.email,
-          searchCount: 0,
-          planType: "free"
-        }, { merge: true });
-
         const userSnap = await getDoc(userRef);
-        const data = userSnap.data();
 
-        userEmail.textContent = `Logged in as: ${user.email}`;
-
-        if (data.planType === "pro") {
-          planBadge.innerHTML = `<div class="pro-badge">PRO</div>`;
-          remainingSearches.textContent = `Unlimited Searches 🚀`;
-        } else {
-          const left = Math.max(0, 1 - (data.searchCount || 0));
-          remainingSearches.textContent = `Remaining Searches: ${left}`;
+        if (!userSnap.exists()) {
+          await setDoc(userRef, {
+            email: user.email,
+            searchCount: 0,
+            planType: "free"
+          });
         }
+
+        const data = (await getDoc(userRef)).data();
+        let left = data.planType === "pro" ? "Unlimited" : Math.max(0, 1 - data.searchCount);
+        remainingSearches.textContent = `Remaining Searches: ${left}`;
+        userEmail.textContent = `Logged in as: ${user.email}`;
       } else {
         window.location.href = "login.html";
       }
@@ -168,35 +146,43 @@
       const user = auth.currentUser;
       if (!user) return;
 
+      const searchValue = document.getElementById("searchInput").value.trim();
+      if (!searchValue) {
+        alert("Please enter a search query.");
+        return;
+      }
+
       const userRef = doc(db, "users", user.uid);
       const userSnap = await getDoc(userRef);
       const data = userSnap.data();
 
-      if (data.planType === "pro") {
-        alert("Search allowed (Pro user)");
-      } else if (data.searchCount >= 1) {
-        alert("Free search limit khatam ho gaya. Upgrade karein.");
+      if (data.planType === "free" && data.searchCount >= 1) {
+        alert("Your free search is used. Upgrade to Pro.");
         window.location.href = "pricing.html";
         return;
-      } else {
-        await updateDoc(userRef, {
-          searchCount: (data.searchCount || 0) + 1
-        });
-        const left = Math.max(0, 1 - ((data.searchCount || 0) + 1));
-        remainingSearches.textContent = `Remaining Searches: ${left}`;
-        alert("Search allowed. Running your AI query...");
       }
 
-      // 🔍 Yahan tera actual AI query call hoga
+      await updateDoc(userRef, {
+        searchCount: (data.searchCount || 0) + 1
+      });
+
+      let left = data.planType === "pro" ? "Unlimited" : Math.max(0, 1 - (data.searchCount + 1));
+      remainingSearches.textContent = `Remaining Searches: ${left}`;
+
+      alert(`✅ Running your search for: "${searchValue}"`);
+      // Aage API ya result logic yahan add hoga
     }
 
-    // 👇 Enter key se search trigger
-    document.addEventListener("keydown", function (event) {
+    window.goToPricing = function () {
+      window.location.href = "pricing.html";
+    }
+
+    window.handleEnter = function (event) {
       if (event.key === "Enter") {
-        event.preventDefault();
         handleSearch();
       }
-    });
+    }
   </script>
 </body>
 </html>
+
