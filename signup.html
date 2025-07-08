@@ -59,6 +59,8 @@
     }
     .error, .success {
       margin-top: 1rem;
+    }
+    .error {
       color: red;
     }
     .success {
@@ -84,7 +86,7 @@
       apiKey: "AIzaSyDlnrYQjxEm4KuIOfpRqWGCHviHeUeysIQ",
       authDomain: "leadstrike-auth.firebaseapp.com",
       projectId: "leadstrike-auth",
-      storageBucket: "leadstrike-auth.firebasestorage.app",
+      storageBucket: "leadstrike-auth.appspot.com",
       messagingSenderId: "334418603750",
       appId: "1:334418603750:web:cba9e98cb23d07a5fe9527",
       measurementId: "G-B8S3LX6LQ6"
@@ -97,19 +99,31 @@
       const email = document.getElementById('signup-email').value;
       const password = document.getElementById('signup-password').value;
       const messageDiv = document.getElementById('message');
-       // ✅ Send Email Verification
-        user.sendEmailVerification().then(() => {
-          alert("Verification email sent. Please check your inbox.");
 
-          // Optional: Redirect to login
-          window.location.href = "login.html";
-        }).catch((error) => {
-          alert("Verification email failed: " + error.message);
-        });
+      if (!email || !password) {
+        messageDiv.innerHTML = "<p class='error'>Please enter email and password.</p>";
+        return;
+      }
+
+      if (password.length < 6) {
+        messageDiv.innerHTML = "<p class='error'>Password must be at least 6 characters.</p>";
+        return;
+      }
+
       try {
-        await createUserWithEmailAndPassword(auth, email, password);
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        await user.sendEmailVerification();
+
+        alert("Verification email sent. Please check your inbox.");
+
         messageDiv.innerHTML = "<p class='success'>Account created successfully ✅</p>";
-        setTimeout(() => window.location.href = "dashboard.html", 1000);
+
+        setTimeout(() => {
+          window.location.href = "login.html";
+        }, 2000);
+
       } catch (error) {
         messageDiv.innerHTML = "<p class='error'>❌ " + error.message + "</p>";
       }
