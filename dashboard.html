@@ -1,82 +1,124 @@
-<!-- ✅ Firebase config (as per your last message) -->
-<script>
-const firebaseConfig = {
-  apiKey: "AIzaSyDlnrYQjxEm4KuIOfpRqWGCHviHeUeysIQ",
-  authDomain: "leadstrike-auth.firebaseapp.com",
-  projectId: "leadstrike-auth",
-  storageBucket: "leadstrike-auth.firebasestorage.app",
-  messagingSenderId: "334418603750",
-  appId: "1:334418603750:web:cba9e98cb23d07a5fe9527",
-  measurementId: "G-B8S3LX6LQ6"
-};
-
-// ✅ Firebase App Initialization
-firebase.initializeApp(firebaseConfig);
-
-// ✅ Auth State Check & Email Verification
-firebase.auth().onAuthStateChanged(function(user) {
-  if (user) {
-    if (user.emailVerified) {
-      document.getElementById("app-content").style.display = "block"; // your dashboard
-      document.getElementById("verify-message").style.display = "none";
-    } else {
-      document.getElementById("verify-message").style.display = "block";
-      document.getElementById("app-content").style.display = "none";
+<!DOCTYPE html>
+<html>
+<head>
+  <title>LeadStrike AI Dashboard</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4f4f4;
     }
-  } else {
-    window.location.href = "login.html"; // or your login page
-  }
-});
+    .navbar {
+      background: #000;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+    }
+    .navbar h1 {
+      margin: 0;
+      font-size: 22px;
+    }
+    .navbar .nav-btns button {
+      margin-left: 10px;
+      padding: 6px 12px;
+      cursor: pointer;
+      background: #fff;
+      border: none;
+      border-radius: 4px;
+    }
+    .container {
+      padding: 20px;
+    }
+    #verify-message {
+      color: red;
+      text-align: center;
+      display: none;
+    }
+  </style>
+</head>
+<body>
 
-// ✅ Signup function
-function signUp() {
-  var email = document.getElementById("email").value;
-  var password = document.getElementById("password").value;
-  firebase.auth().createUserWithEmailAndPassword(email, password)
-    .then((userCredential) => {
-      userCredential.user.sendEmailVerification()
-        .then(() => {
-          alert("Verification email sent. Please check your inbox.");
+  <div class="navbar">
+    <h1>LeadStrike AI</h1>
+    <div class="nav-btns">
+      <input type="text" id="searchInput" placeholder="Search..." />
+      <button id="searchBtn">Search</button>
+      <button id="proBtn">Pro</button>
+      <button id="logoutBtn">Logout</button>
+    </div>
+  </div>
+
+  <div id="verify-message">Please verify your email to access the dashboard.</div>
+
+  <div class="container" id="app-content" style="display: none;">
+    <h2>Welcome to your Dashboard!</h2>
+    <p>You are now logged in and verified ✅</p>
+    <!-- Your dashboard content here -->
+  </div>
+
+  <!-- Firebase Config & Logic -->
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDlnrYQjxEm4KuIOfpRqWGCHviHeUeysIQ",
+      authDomain: "leadstrike-auth.firebaseapp.com",
+      projectId: "leadstrike-auth",
+      storageBucket: "leadstrike-auth.firebasestorage.app",
+      messagingSenderId: "334418603750",
+      appId: "1:334418603750:web:cba9e98cb23d07a5fe9527",
+      measurementId: "G-B8S3LX6LQ6"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        if (user.emailVerified) {
+          document.getElementById("app-content").style.display = "block";
+          document.getElementById("verify-message").style.display = "none";
+        } else {
+          document.getElementById("verify-message").style.display = "block";
+          document.getElementById("app-content").style.display = "none";
+        }
+      } else {
+        window.location.href = "login.html";
+      }
+    });
+
+    const inputField = document.getElementById("searchInput");
+    if (inputField) {
+      inputField.addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          document.getElementById("searchBtn").click();
+        }
+      });
+    }
+
+    const proButton = document.getElementById("proBtn");
+    if (proButton) {
+      proButton.addEventListener("click", function() {
+        window.location.href = "pricing.html";
+      });
+    }
+
+    const logoutBtn = document.getElementById("logoutBtn");
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", function() {
+        firebase.auth().signOut().then(() => {
+          window.location.href = "login.html";
+        }).catch((error) => {
+          alert("Logout failed: " + error.message);
         });
-    })
-    .catch((error) => {
-      alert(error.message);
-    });
-}
-
-// ✅ Enter Key to Search Support
-const inputField = document.getElementById("searchInput");
-if (inputField) {
-  inputField.addEventListener("keypress", function(event) {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      document.getElementById("searchBtn").click();
+      });
     }
-  });
-}
+  </script>
 
-// ✅ Pro Button Click Redirect
-const proButton = document.getElementById("proBtn");
-if (proButton) {
-  proButton.addEventListener("click", function() {
-    window.location.href = "pricing.html";
-  });
-}
-
-// ✅ Logout Button Functionality
-const logoutBtn = document.getElementById("logoutBtn");
-if (logoutBtn) {
-  logoutBtn.addEventListener("click", function() {
-    firebase.auth().signOut().then(() => {
-      window.location.href = "login.html";
-    }).catch((error) => {
-      alert("Logout failed: " + error.message);
-    });
-  });
-}
-</script>
-
-<!-- ✅ Add this Logout Button somewhere in your dashboard HTML -->
-<!-- <button id="logoutBtn">Logout</button> -->
-
-<!-- ✅ Design: Navbar, button, fonts, responsive classes are assumed already in your HTML/CSS files -->
+</body>
+</html>
