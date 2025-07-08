@@ -59,8 +59,6 @@
     }
     .error, .success {
       margin-top: 1rem;
-    }
-    .error {
       color: red;
     }
     .success {
@@ -80,13 +78,13 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+    import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDlnrYQjxEm4KuIOfpRqWGCHviHeUeysIQ",
       authDomain: "leadstrike-auth.firebaseapp.com",
       projectId: "leadstrike-auth",
-      storageBucket: "leadstrike-auth.appspot.com",
+      storageBucket: "leadstrike-auth.firebasestorage.app",
       messagingSenderId: "334418603750",
       appId: "1:334418603750:web:cba9e98cb23d07a5fe9527",
       measurementId: "G-B8S3LX6LQ6"
@@ -100,29 +98,17 @@
       const password = document.getElementById('signup-password').value;
       const messageDiv = document.getElementById('message');
 
-      if (!email || !password) {
-        messageDiv.innerHTML = "<p class='error'>Please enter email and password.</p>";
-        return;
-      }
-
-      if (password.length < 6) {
-        messageDiv.innerHTML = "<p class='error'>Password must be at least 6 characters.</p>";
-        return;
-      }
-
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
-        await user.sendEmailVerification();
+        // Correct way to send email verification
+        await sendEmailVerification(user);
 
         alert("Verification email sent. Please check your inbox.");
 
         messageDiv.innerHTML = "<p class='success'>Account created successfully ✅</p>";
-
-        setTimeout(() => {
-          window.location.href = "login.html";
-        }, 2000);
+        setTimeout(() => window.location.href = "dashboard.html", 1000);
 
       } catch (error) {
         messageDiv.innerHTML = "<p class='error'>❌ " + error.message + "</p>";
@@ -131,3 +117,4 @@
   </script>
 </body>
 </html>
+
