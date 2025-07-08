@@ -1,188 +1,82 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dashboard - LeadStrike AI</title>
-  <link rel="stylesheet" href="style.css" />
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(to bottom right, #e0f0ff, #f5faff);
-      color: #333;
-    }
-    .navbar {
-      background-color: #007bff;
-      color: white;
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .navbar h1 {
-      margin: 0;
-      font-size: 1.5rem;
-    }
-    .logout-btn, .pro-btn {
-      background-color: white;
-      color: #007bff;
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-      margin-left: 10px;
-    }
-    .logout-btn:hover, .pro-btn:hover {
-      background-color: #f0f0f0;
-    }
-    .content {
-      padding: 2rem;
-      text-align: center;
-    }
-    .card {
-      background: white;
-      padding: 2rem;
-      border-radius: 16px;
-      max-width: 600px;
-      margin: 2rem auto;
-      box-shadow: 0 6px 20px rgba(0, 123, 255, 0.1);
-    }
-    .search-btn {
-      background-color: #007bff;
-      color: white;
-      border: none;
-      padding: 0.75rem 1.5rem;
-      font-size: 1rem;
-      border-radius: 10px;
-      margin-top: 1rem;
-      cursor: pointer;
-    }
-    .search-btn:hover {
-      background-color: #0056b3;
-    }
-    input#searchInput {
-      padding: 12px;
-      width: 90%;
-      margin-top: 15px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 1rem;
-    }
-  </style>
-</head>
-<body>
-  <div class="navbar">
-    <h1>LeadStrike AI</h1>
-    <div>
-      <button class="pro-btn" onclick="goToPricing()">Go Pro 🚀</button>
-      <button class="logout-btn" onclick="logout()">Logout</button>
-    </div>
-  </div>
+<!-- ✅ Firebase config (as per your last message) -->
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyDlnrYQjxEm4KuIOfpRqWGCHviHeUeysIQ",
+  authDomain: "leadstrike-auth.firebaseapp.com",
+  projectId: "leadstrike-auth",
+  storageBucket: "leadstrike-auth.firebasestorage.app",
+  messagingSenderId: "334418603750",
+  appId: "1:334418603750:web:cba9e98cb23d07a5fe9527",
+  measurementId: "G-B8S3LX6LQ6"
+};
 
-  <div class="content">
-    <div class="card">
-      <h2>Welcome to Your Dashboard</h2>
-      <p id="userEmail">Loading...</p>
-      <p id="remainingSearches">Checking limits...</p>
-      <hr />
-      <input id="searchInput" placeholder="Type your search here..." onkeypress="handleEnter(event)" />
-      <br/>
-      <button class="search-btn" onclick="handleSearch()">Run Search</button>
-    </div>
-  </div>
+// ✅ Firebase App Initialization
+firebase.initializeApp(firebaseConfig);
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+// ✅ Auth State Check & Email Verification
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    if (user.emailVerified) {
+      document.getElementById("app-content").style.display = "block"; // your dashboard
+      document.getElementById("verify-message").style.display = "none";
+    } else {
+      document.getElementById("verify-message").style.display = "block";
+      document.getElementById("app-content").style.display = "none";
+    }
+  } else {
+    window.location.href = "login.html"; // or your login page
+  }
+});
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDlnrYQjxEm4KuIOfpRqWGCHviHeUeysIQ",
-      authDomain: "leadstrike-auth.firebaseapp.com",
-      projectId: "leadstrike-auth",
-      storageBucket: "leadstrike-auth.firebasestorage.app",
-      messagingSenderId: "334418603750",
-      appId: "1:334418603750:web:cba9e98cb23d07a5fe9527",
-      measurementId: "G-B8S3LX6LQ6"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    const userEmail = document.getElementById("userEmail");
-    const remainingSearches = document.getElementById("remainingSearches");
-
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const userRef = doc(db, "users", user.uid);
-        const userSnap = await getDoc(userRef);
-
-        if (!userSnap.exists()) {
-          await setDoc(userRef, {
-            email: user.email,
-            searchCount: 0,
-            planType: "free"
-          });
-        }
-
-        const data = (await getDoc(userRef)).data();
-        let left = data.planType === "pro" ? "Unlimited" : Math.max(0, 1 - data.searchCount);
-        remainingSearches.textContent = `Remaining Searches: ${left}`;
-        userEmail.textContent = `Logged in as: ${user.email}`;
-      } else {
-        window.location.href = "login.html";
-      }
+// ✅ Signup function
+function signUp() {
+  var email = document.getElementById("email").value;
+  var password = document.getElementById("password").value;
+  firebase.auth().createUserWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      userCredential.user.sendEmailVerification()
+        .then(() => {
+          alert("Verification email sent. Please check your inbox.");
+        });
+    })
+    .catch((error) => {
+      alert(error.message);
     });
+}
 
-    window.logout = async function () {
-      await signOut(auth);
+// ✅ Enter Key to Search Support
+const inputField = document.getElementById("searchInput");
+if (inputField) {
+  inputField.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      document.getElementById("searchBtn").click();
+    }
+  });
+}
+
+// ✅ Pro Button Click Redirect
+const proButton = document.getElementById("proBtn");
+if (proButton) {
+  proButton.addEventListener("click", function() {
+    window.location.href = "pricing.html";
+  });
+}
+
+// ✅ Logout Button Functionality
+const logoutBtn = document.getElementById("logoutBtn");
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", function() {
+    firebase.auth().signOut().then(() => {
       window.location.href = "login.html";
-    }
+    }).catch((error) => {
+      alert("Logout failed: " + error.message);
+    });
+  });
+}
+</script>
 
-    window.handleSearch = async function () {
-      const user = auth.currentUser;
-      if (!user) return;
+<!-- ✅ Add this Logout Button somewhere in your dashboard HTML -->
+<!-- <button id="logoutBtn">Logout</button> -->
 
-      const searchValue = document.getElementById("searchInput").value.trim();
-      if (!searchValue) {
-        alert("Please enter a search query.");
-        return;
-      }
-
-      const userRef = doc(db, "users", user.uid);
-      const userSnap = await getDoc(userRef);
-      const data = userSnap.data();
-
-      if (data.planType === "free" && data.searchCount >= 1) {
-        alert("Your free search is used. Upgrade to Pro.");
-        window.location.href = "pricing.html";
-        return;
-      }
-
-      await updateDoc(userRef, {
-        searchCount: (data.searchCount || 0) + 1
-      });
-
-      let left = data.planType === "pro" ? "Unlimited" : Math.max(0, 1 - (data.searchCount + 1));
-      remainingSearches.textContent = `Remaining Searches: ${left}`;
-
-      alert(`✅ Running your search for: "${searchValue}"`);
-      // Aage API ya result logic yahan add hoga
-    }
-
-    window.goToPricing = function () {
-      window.location.href = "pricing.html";
-    }
-
-    window.handleEnter = function (event) {
-      if (event.key === "Enter") {
-        handleSearch();
-      }
-    }
-  </script>
-</body>
-</html>
-
+<!-- ✅ Design: Navbar, button, fonts, responsive classes are assumed already in your HTML/CSS files -->
