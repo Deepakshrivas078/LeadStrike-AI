@@ -136,7 +136,7 @@
     onAuthStateChanged(auth, async (user) => {
   if (user) {
 
-    if (!user.emailVerified) {
+    if (!user.emailUnverified) {
       alert("Please verify your email before accessing the dashboard.");
       await signOut(auth);
       window.location.href = "login.html";
