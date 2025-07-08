@@ -6,11 +6,34 @@
   <title>Dashboard - LeadStrike AI</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
+    <style>
+  /* Toast Styles */
+  #toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background-color: #333;
+    color: #fff;
+    padding: 14px 20px;
+    border-radius: 8px;
+    font-size: 15px;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+  }
+  #toast.show {
+    opacity: 1;
+  }
+</style>
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
+
+  <div id="toast"></div>
+
     body {
       font-family: 'Inter', sans-serif;
       background: #f4f7fa;
@@ -116,6 +139,16 @@
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
     import { getFirestore, doc, setDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
+function showToast(message, color = "#333") {
+  const toast = document.getElementById("toast");
+  toast.style.backgroundColor = color;
+  toast.innerText = message;
+  toast.classList.add("show");
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 3000);
+}
+    
     const firebaseConfig = {
       apiKey: "AIzaSyDlnrYQjxEm4KuIOfpRqWGCHviHeUeysIQ",
       authDomain: "leadstrike-auth.firebaseapp.com",
@@ -196,7 +229,9 @@
       let left = data.planType === "pro" ? "Unlimited" : Math.max(0, 1 - (data.searchCount + 1));
       remainingSearches.textContent = `Remaining Searches: ${left}`;
 
-      alert(`✅ Running your search for: "${searchValue}"`);
+      showToast("✅ Running your search for: \"" + searchValue + "\"", "#16a34a"); // success
+showToast("❌ Please enter a search query.", "#dc2626"); // error
+
       // Add API call or result display logic here
     }
 
