@@ -105,8 +105,10 @@
         // Correct way to send email verification
         await sendEmailVerification(user);
 
-        alert("Verification email sent. Please check your inbox.");
+        alert("Verification email sent. Please check your inbox. If there is no email please check spam box.");
 
+        alert("Without email verification you can not use the searchbar. Before using searchbar make sure you verified your email.");
+        
         messageDiv.innerHTML = "<p class='success'>Account created successfully ✅</p>";
         setTimeout(() => window.location.href = "dashboard.html", 1000);
 
