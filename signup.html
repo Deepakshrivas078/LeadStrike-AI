@@ -97,6 +97,15 @@
       const email = document.getElementById('signup-email').value;
       const password = document.getElementById('signup-password').value;
       const messageDiv = document.getElementById('message');
+       // ✅ Send Email Verification
+        user.sendEmailVerification().then(() => {
+          alert("Verification email sent. Please check your inbox.");
+
+          // Optional: Redirect to login
+          window.location.href = "login.html";
+        }).catch((error) => {
+          alert("Verification email failed: " + error.message);
+        });
       try {
         await createUserWithEmailAndPassword(auth, email, password);
         messageDiv.innerHTML = "<p class='success'>Account created successfully ✅</p>";
