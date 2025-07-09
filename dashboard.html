@@ -6,16 +6,11 @@
   <title>Dashboard - LeadStrike AI</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    <style>
-
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
-
-  <div id="toast"></div>
-
     body {
       font-family: 'Inter', sans-serif;
       background: #f4f7fa;
@@ -93,6 +88,33 @@
       border: 1px solid #d1d5db;
       font-size: 1rem;
     }
+    #toast {
+      visibility: hidden;
+      min-width: 250px;
+      background-color: #333;
+      color: white;
+      text-align: center;
+      border-radius: 10px;
+      padding: 1rem;
+      position: fixed;
+      z-index: 999;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-weight: 600;
+    }
+    #toast.show {
+      visibility: visible;
+      animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    }
+    @keyframes fadein {
+      from {bottom: 10px; opacity: 0;} 
+      to {bottom: 30px; opacity: 1;}
+    }
+    @keyframes fadeout {
+      from {bottom: 30px; opacity: 1;}
+      to {bottom: 10px; opacity: 0;}
+    }
   </style>
 </head>
 <body>
@@ -116,26 +138,28 @@
     </div>
   </div>
 
+  <div id="toast"></div>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
     import { getFirestore, doc, setDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
-function showToast(message, color = "#333") {
-  const toast = document.getElementById("toast");
-  toast.style.backgroundColor = color;
-  toast.innerText = message;
-  toast.classList.add("show");
-  setTimeout(() => {
-    toast.classList.remove("show");
-  }, 3000);
-}
-    
+    function showToast(message, color = "#333") {
+      const toast = document.getElementById("toast");
+      toast.style.backgroundColor = color;
+      toast.innerText = message;
+      toast.classList.add("show");
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 3000);
+    }
+
     const firebaseConfig = {
       apiKey: "AIzaSyDlnrYQjxEm4KuIOfpRqWGCHviHeUeysIQ",
       authDomain: "leadstrike-auth.firebaseapp.com",
       projectId: "leadstrike-auth",
-      storageBucket: "leadstrike-auth.firebasestorage.app",
+      storageBucket: "leadstrike-auth.appspot.com",
       messagingSenderId: "334418603750",
       appId: "1:334418603750:web:cba9e98cb23d07a5fe9527",
       measurementId: "G-B8S3LX6LQ6"
@@ -149,18 +173,16 @@ function showToast(message, color = "#333") {
     const remainingSearches = document.getElementById("remainingSearches");
 
     onAuthStateChanged(auth, async (user) => {
-  if (user) {
+      if (user) {
+        if (!user.emailVerified) {
+          alert("Please verify your email before accessing the dashboard.");
+          await signOut(auth);
+          window.location.href = "login.html";
+          return;
+        }
 
-    if (!user.emailUnverified) {
-      alert("Please verify your email before accessing the dashboard.");
-      await signOut(auth);
-      window.location.href = "login.html";
-      return;
-    }
-
-    const userRef = doc(db, "users", user.uid);
-    const userSnap = await getDoc(userRef);
-
+        const userRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userRef);
 
         if (!userSnap.exists()) {
           await setDoc(userRef, {
@@ -190,7 +212,7 @@ function showToast(message, color = "#333") {
 
       const searchValue = document.getElementById("searchInput").value.trim();
       if (!searchValue) {
-        alert("Please enter a search query.");
+        showToast("❌ Please enter a search query.", "#dc2626");
         return;
       }
 
@@ -211,10 +233,9 @@ function showToast(message, color = "#333") {
       let left = data.planType === "pro" ? "Unlimited" : Math.max(0, 1 - (data.searchCount + 1));
       remainingSearches.textContent = `Remaining Searches: ${left}`;
 
-      showToast("✅ Running your search for: \"" + searchValue + "\"", "#16a34a"); // success
-showToast("❌ Please enter a search query.", "#dc2626"); // error
+      showToast(`✅ Running your search for: "${searchValue}"`, "#16a34a");
 
-      // Add API call or result display logic here
+      // TODO: API call here
     }
 
     window.goToPricing = function () {
