@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>LeadStrike AI</title>
   <style>
     * {
@@ -72,6 +72,58 @@
       border-radius: 12px;
     }
 
+    .pricing {
+      background-color: #fff;
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+
+    .pricing h2 {
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      color: #111;
+    }
+
+    .plans {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+    }
+
+    .plan {
+      background-color: #f3f4f6;
+      padding: 2rem;
+      border-radius: 12px;
+      width: 300px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    .plan h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .plan p {
+      margin-bottom: 1.5rem;
+      color: #444;
+    }
+
+    .plan button {
+      padding: 0.75rem 1.5rem;
+      background-color: #4f46e5;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .plan button:hover {
+      background-color: #3730a3;
+    }
+
     @media (max-width: 768px) {
       .container {
         flex-direction: column-reverse;
@@ -85,18 +137,46 @@
       .hero-text p {
         font-size: 1rem;
       }
+
+      .plans {
+        flex-direction: column;
+        align-items: center;
+      }
     }
   </style>
 </head>
 <body>
+  <!-- Hero Section -->
   <section class="container">
     <div class="hero-text">
       <h1>LeadStrike AI</h1>
       <p>Get verified business emails, contacts & social data in seconds. Just type your query in your language. Built for freelancers, marketers & entrepreneurs.</p>
-      <button onclick="window.location.href='#pricing'">Start Free</button>
+      <button onclick="window.location.href='signup.html'">Start Free</button>
     </div>
     <div class="hero-image">
       <img src="https://via.placeholder.com/500x350.png?text=LeadStrike+Preview" alt="App Preview" />
+    </div>
+  </section>
+
+  <!-- Pricing Section -->
+  <section class="pricing" id="pricing">
+    <h2>Choose Your Plan</h2>
+    <div class="plans">
+      <div class="plan">
+        <h3>Free Trial</h3>
+        <p>1 search only, no download access</p>
+        <button onclick="window.location.href='signup.html'">Start Free</button>
+      </div>
+      <div class="plan">
+        <h3>Monthly Plan</h3>
+        <p>$49/month - Unlimited searches + Excel download</p>
+        <button onclick="window.location.href='pricing.html'">Buy Now</button>
+      </div>
+      <div class="plan">
+        <h3>Yearly Plan</h3>
+        <p>$550/year - Priority support + all features</p>
+        <button onclick="window.location.href='pricing.html'">Buy Now</button>
+      </div>
     </div>
   </section>
 </body>
