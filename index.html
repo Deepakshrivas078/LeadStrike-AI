@@ -28,8 +28,33 @@
     .cta, .signup { text-align: center; }
     form input, form textarea { width: 100%; padding: 0.75rem; margin-bottom: 1rem; border-radius: 8px; border: 1px solid #ccc; }
     form button { background: linear-gradient(145deg, #00ffff, #0ff); border: none; padding: 0.75rem 1.5rem; border-radius: 12px; font-weight: bold; cursor: pointer; }
-    footer { text-align: center; padding: 2rem; color: #888; border-top: 1px solid #222; }
-    @media (max-width: 768px) { .container { flex-direction: column-reverse; text-align: center; } }
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: #888;
+      border-top: 1px solid #222;
+      background: rgba(0,0,0,0.5);
+      font-size: 0.9rem;
+    }
+    footer p {
+      margin-bottom: 8px;
+    }
+    footer nav a {
+      color: #888;
+      margin: 0 12px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+    footer nav a:hover {
+      color: #00ffff;
+      text-shadow: 0 0 8px #00ffff;
+    }
+    @media (max-width: 768px) {
+      .container { flex-direction: column-reverse; text-align: center; }
+      .pricing-cards { flex-direction: column; align-items: center; }
+      footer nav a { display: inline-block; margin: 8px 12px; }
+    }
   </style>
 </head>
 <body>
@@ -39,7 +64,7 @@
       <a href="#features">Features</a>
       <a href="pricing.html">Pricing</a>
       <a href="#faq">FAQ</a>
-      <a href="#contact">Contact</a>
+      <a href="contact.html">Contact</a>
     </nav>
   </header>
 
@@ -94,28 +119,31 @@
   </section>
 
   <section id="faq" class="faq">
-    <h2>Frequently Asked Questions</h2>
+    <h2>FAQ</h2>
     <ul>
-      <li><strong>Is it free to try?</strong> Yes! You get 1 free search without signup.</li>
-      <li><strong>What data do I get?</strong> You get emails, phone numbers, websites, LinkedIn, Twitter, and company details.</li>
-      <li><strong>Can I use it in Hindi or regional language?</strong> Absolutely. Type in any language – we’ll understand and give accurate results.</li>
+      <li><strong>Q:</strong> How accurate is the data?<br /><strong>A:</strong> We verify data from multiple trusted sources daily.</li>
+      <li><strong>Q:</strong> Can I try before buying?<br /><strong>A:</strong> Yes, free plan offers 1 search.</li>
+      <li><strong>Q:</strong> Is the app multilingual?<br /><strong>A:</strong> Absolutely, ask questions in any language.</li>
     </ul>
   </section>
 
-  <section id="signup" class="signup">
-    <h2>Get Your Free Search Now</h2>
-    <p>Enter your name & email and we’ll give you access to your first search for free.</p>
-    <form>
-      <input type="text" placeholder="Your Name" required />
-      <input type="email" placeholder="Your Email" required />
-      <button onclick="window.location.href='signup.html'">Get Started</button>
-    </div>
+  <section id="contact" class="contact">
+    <h2>Contact Us</h2>
+    <form action="/send-message" method="POST">
+      <input type="text" name="name" placeholder="Your Name" required />
+      <input type="email" name="email" placeholder="Your Email" required />
+      <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
+      <button type="submit">Send Message</button>
+    </form>
   </section>
 
-
   <footer>
- <footer style="text-align:center; padding: 2rem; background:#f2f2f2;">
-  <a href="terms.html" style="margin: 0 1rem;">Terms & Conditions</a>
-  <a href="privacy.html" style="margin: 0 1rem;">Privacy Policy</a>
-  <a href="contact.html" style="margin: 0 1rem;">Contact Us</a>
-</footer>  
+    <p>&copy; 2025 LeadStrike AI. All rights reserved.</p>
+    <nav>
+      <a href="/privacy.html">Privacy Policy</a>
+      <a href="/contact.html">Contact</a>
+      <a href="/terms.html">Terms of Service</a>
+    </nav>
+  </footer>
+</body>
+</html>
