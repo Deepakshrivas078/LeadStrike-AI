@@ -4,75 +4,84 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login - LeadStrike AI</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Log In - LeadStrike AI</title>
   <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #eef2f5;
+      background: radial-gradient(circle at top left, #0f0f2d, #000);
+      color: #e0e0e0;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      margin: 0;
+      min-height: 100vh;
     }
     .login-container {
-      background: white;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-      width: 100%;
-      max-width: 400px;
+      position: relative;
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0,255,255,0.2);
+      border-radius: 16px;
+      box-shadow: 0 0 20px rgba(0,255,255,0.2);
+      width: 100%; max-width: 400px;
+      padding: 2.5rem;
       text-align: center;
     }
-    h2 {
-      margin-bottom: 1.5rem;
-      color: #007bff;
+    .login-container .logo {
+      position: absolute;
+      top: 16px; left: 16px;
+      font-size: 1.25rem;
+      color: #00ffff;
+      text-shadow: 0 0 5px #00ffff;
+      font-weight: bold;
     }
-    input {
-      width: 100%;
-      padding: 0.8rem;
-      margin: 0.5rem 0;
-      border: 1px solid #ccc;
+    h2 {
+      margin-top: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: #00ffff;
+      text-shadow: 0 0 5px #00ffff;
+    }
+    input[type="email"], input[type="password"] {
+      width: 100%; padding: 0.75rem 1rem; margin-bottom: 1rem;
+      border: 1px solid rgba(0,255,255,0.2);
       border-radius: 8px;
+      background: rgba(255,255,255,0.1);
+      color: #e0e0e0;
       font-size: 1rem;
     }
     button {
-      background-color: #007bff;
-      color: white;
-      padding: 0.8rem;
-      width: 100%;
+      width: 100%; padding: 0.75rem;
       border: none;
-      border-radius: 8px;
+      border-radius: 12px;
+      background: linear-gradient(145deg, #00ffff, #0ff);
+      color: #000;
+      font-weight: bold;
       font-size: 1rem;
-      margin-top: 1rem;
       cursor: pointer;
+      box-shadow: 0 0 15px #0ff;
+      transition: transform 0.3s, box-shadow 0.3s;
     }
     button:hover {
-      background-color: #0056b3;
+      transform: translateY(-2px);
+      box-shadow: 0 0 25px #0ff;
     }
     .switch-link {
-      margin-top: 1rem;
-      display: block;
-      color: #007bff;
-      text-decoration: none;
+      display: block; margin-top: 1.25rem;
+      color: #00ffff; text-decoration: none;
     }
-    .error, .success {
-      margin-top: 1rem;
-      color: red;
-    }
-    .success {
-      color: green;
-    }
+    .switch-link:hover { text-decoration: underline; }
+    #message { margin-top: 1rem; }
+    .error { color: #ff6b6b; }
   </style>
 </head>
 <body>
   <div class="login-container">
-    <h2>Login to LeadStrike AI</h2>
-    <input type="email" id="email" placeholder="Email" />
-    <input type="password" id="password" placeholder="Password" />
-    <button onclick="login()">Login</button>
-    <a class="switch-link" href="signup.html">Create an Account</a>
+    <div class="logo">LeadStrike AI</div>
+    <h2>Log In</h2>
+    <input type="email" id="login-email" placeholder="Email Address" required />
+    <input type="password" id="login-password" placeholder="Password" required />
+    <button onclick="login()">Log In</button>
+    <a class="switch-link" href="signup.html">Don't have an account? Sign Up</a>
     <div id="message"></div>
   </div>
 
@@ -94,13 +103,13 @@
     const auth = getAuth(app);
 
     window.login = async function() {
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
       const messageDiv = document.getElementById('message');
+
       try {
         await signInWithEmailAndPassword(auth, email, password);
-        messageDiv.innerHTML = "<p class='success'>Login successful ✅</p>";
-        setTimeout(() => window.location.href = "dashboard.html", 1000);
+        window.location.href = 'dashboard.html';
       } catch (error) {
         messageDiv.innerHTML = "<p class='error'>❌ " + error.message + "</p>";
       }
@@ -108,3 +117,4 @@
   </script>
 </body>
 </html>
+
