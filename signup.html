@@ -5,74 +5,106 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Sign Up - LeadStrike AI</title>
-  <link rel="stylesheet" href="style.css" />
   <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #eef2f5;
+      background: radial-gradient(circle at top left, #0f0f2d, #000);
+      color: #e0e0e0;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      margin: 0;
+      min-height: 100vh;
     }
     .signup-container {
-      background: white;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-      width: 100%;
-      max-width: 400px;
-      text-align: center;
+      position: relative;
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0,255,255,0.2);
+      border-radius: 16px;
+      box-shadow: 0 0 20px rgba(0,255,255,0.2);
+      width: 100%; max-width: 400px;
+      padding: 2.5rem;
+    }
+    .signup-container .logo {
+      position: absolute;
+      top: 16px; left: 16px;
+      font-size: 1.25rem;
+      color: #00ffff;
+      text-shadow: 0 0 5px #00ffff;
+      font-weight: bold;
     }
     h2 {
+      margin-top: 1.5rem;
       margin-bottom: 1.5rem;
-      color: #28a745;
+      color: #00ffff;
+      text-shadow: 0 0 5px #00ffff;
+      text-align: center;
     }
-    input {
-      width: 100%;
-      padding: 0.8rem;
-      margin: 0.5rem 0;
-      border: 1px solid #ccc;
+    input[type="email"], input[type="password"] {
+      width: 100%; padding: 0.75rem 1rem; margin-bottom: 1rem;
+      border: 1px solid rgba(0,255,255,0.2);
       border-radius: 8px;
+      background: rgba(255,255,255,0.1);
+      color: #e0e0e0;
       font-size: 1rem;
     }
-    button {
-      background-color: #28a745;
-      color: white;
-      padding: 0.8rem;
-      width: 100%;
+    .terms {
+      display: flex; align-items: center;
+      font-size: 0.9rem; margin: 1rem 0;
+      color: #c5c5c5;
+    }
+    .terms input {
+      margin-right: 8px;
+      accent-color: #00ffff;
+    }
+    .terms a {
+      color: #00ffff;
+      text-decoration: underline;
+      margin: 0 4px;
+    }
+    .signup-container button {
+      width: 100%; padding: 0.75rem;
       border: none;
-      border-radius: 8px;
+      border-radius: 12px;
+      background: linear-gradient(145deg, #00ffff, #0ff);
+      color: #000;
+      font-weight: bold;
       font-size: 1rem;
-      margin-top: 1rem;
       cursor: pointer;
+      box-shadow: 0 0 15px #0ff;
+      transition: transform 0.3s, box-shadow 0.3s;
     }
-    button:hover {
-      background-color: #1e7e34;
+    .signup-container button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 25px #0ff;
     }
     .switch-link {
-      margin-top: 1rem;
-      display: block;
-      color: #28a745;
+      display: block; text-align: center;
+      margin-top: 1.25rem;
+      color: #00ffff;
       text-decoration: none;
     }
-    .error, .success {
-      margin-top: 1rem;
-      color: red;
-    }
-    .success {
-      color: green;
-    }
+    .switch-link:hover { text-decoration: underline; }
+    #message { margin-top: 1rem; text-align: center; }
+    .error { color: #ff6b6b; }
+    .success { color: #7af58e; }
   </style>
 </head>
 <body>
   <div class="signup-container">
+    <div class="logo">LeadStrike AI</div>
     <h2>Create Account</h2>
-    <input type="email" id="signup-email" placeholder="Email" />
-    <input type="password" id="signup-password" placeholder="Password" />
+    <input type="email" id="signup-email" placeholder="Email Address" required />
+    <input type="password" id="signup-password" placeholder="Password" required />
+    <div class="terms">
+      <input type="checkbox" id="terms-checkbox" />
+      <label for="terms-checkbox">
+        I agree to the <a href="terms.html" target="_blank">Terms</a> and <a href="privacy.html" target="_blank">Privacy Policy</a>
+      </label>
+    </div>
     <button onclick="signup()">Create Account</button>
-    <a class="switch-link" href="login.html">Back to Login</a>
+    <a class="switch-link" href="login.html">Already have an account? Log In</a>
     <div id="message"></div>
   </div>
 
@@ -96,22 +128,20 @@
     window.signup = async function() {
       const email = document.getElementById('signup-email').value;
       const password = document.getElementById('signup-password').value;
+      const checkbox = document.getElementById('terms-checkbox');
       const messageDiv = document.getElementById('message');
+
+      if (!checkbox.checked) {
+        messageDiv.innerHTML = "<p class='error'>❌ You must agree to the Terms and Privacy Policy.</p>";
+        return;
+      }
 
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
-
-        // Correct way to send email verification
         await sendEmailVerification(user);
-
-        alert("Verification email sent. Please check your inbox. If there is no email please check spam box.");
-
-        alert("Without email verification you can not use the searchbar. Before using searchbar make sure you verified your email.");
-        
-        messageDiv.innerHTML = "<p class='success'>Account created successfully ✅</p>";
+        messageDiv.innerHTML = "<p class='success'>✅ Verification email sent! Check your inbox.</p>";
         setTimeout(() => window.location.href = "dashboard.html", 1000);
-
       } catch (error) {
         messageDiv.innerHTML = "<p class='error'>❌ " + error.message + "</p>";
       }
@@ -119,4 +149,3 @@
   </script>
 </body>
 </html>
-
