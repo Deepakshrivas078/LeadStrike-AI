@@ -2,132 +2,87 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dashboard - LeadStrike AI</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    * { margin:0; padding:0; box-sizing:border-box; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family:'Inter', sans-serif;
+      font-family: 'Inter', sans-serif;
       background: radial-gradient(circle at top left, #0f0f2d, #000);
-      color:#e0e0e0;
-      min-height:100vh;
+      color: #e0e0e0;
+      min-height: 100vh;
     }
     .navbar {
       background: rgba(0,255,255,0.1);
       border-bottom:1px solid rgba(0,255,255,0.2);
       box-shadow:0 0 20px rgba(0,255,255,0.2);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
+      display:flex; align-items:center; justify-content:space-between;
       padding:1rem 2rem;
     }
     .navbar h1 {
-      color:#00ffff;
-      text-shadow:0 0 5px #00ffff;
-      font-size:1.6rem;
-      font-weight:700;
+      color:#00ffff; text-shadow:0 0 5px #00ffff;
+      font-size:1.6rem; font-weight:700;
     }
-    .navbar a,
-    .navbar button {
+    .navbar a, .navbar button {
       background: linear-gradient(145deg, #00ffff, #0ff);
-      color:#000;
-      border:none;
-      padding:0.6rem 1rem;
-      border-radius:12px;
-      font-weight:600;
-      margin-left:0.75rem;
-      cursor:pointer;
-      box-shadow:0 0 15px #0ff;
+      color:#000; border:none; padding:0.6rem 1rem;
+      border-radius:12px; font-weight:600; margin-left:0.75rem;
+      cursor:pointer; box-shadow:0 0 15px #0ff;
       transition:transform 0.3s, box-shadow 0.3s;
-      text-decoration:none;
-      display:inline-block;
-      text-align:center;
+      text-decoration:none; display:inline-block; text-align:center;
     }
-    .navbar a:hover,
-    .navbar button:hover {
-      transform:translateY(-2px);
-      box-shadow:0 0 25px #0ff;
+    .navbar a:hover, .navbar button:hover {
+      transform:translateY(-2px); box-shadow:0 0 25px #0ff;
     }
-    .content {
-      padding:3rem 1rem;
-      display:flex;
-      justify-content:center;
-    }
+    .content { padding:3rem 1rem; display:flex; justify-content:center; }
     .card {
-      background: rgba(255,255,255,0.05);
-      backdrop-filter:blur(10px);
-      border:1px solid rgba(0,255,255,0.2);
-      border-radius:20px;
+      background: rgba(255,255,255,0.05); backdrop-filter:blur(10px);
+      border:1px solid rgba(0,255,255,0.2); border-radius:20px;
       box-shadow:0 0 20px rgba(0,255,255,0.2);
-      max-width:600px;
-      width:100%;
-      padding:2.5rem;
-      text-align:center;
+      max-width:600px; width:100%; padding:2.5rem; text-align:center;
     }
     .card h2 {
-      color:#00ffff;
-      text-shadow:0 0 5px #00ffff;
-      margin-bottom:1rem;
-      font-size:1.8rem;
+      color:#00ffff; text-shadow:0 0 5px #00ffff;
+      margin-bottom:1rem; font-size:1.8rem;
     }
-    .card p {
-      font-size:1rem;
-      color:#c5c5c5;
-      margin-bottom:0.75rem;
-    }
+    .card p { font-size:1rem; color:#c5c5c5; margin-bottom:0.75rem; }
     input#searchInput {
       width:90%; padding:12px; margin-top:15px;
-      border-radius:8px;
-      border:1px solid rgba(0,255,255,0.2);
-      background:rgba(255,255,255,0.1);
-      color:#e0e0e0;
-      font-size:1rem;
+      border-radius:8px; border:1px solid rgba(0,255,255,0.2);
+      background:rgba(255,255,255,0.1); color:#e0e0e0; font-size:1rem;
     }
     .search-btn {
       background: linear-gradient(145deg, #00ffff, #0ff);
-      color:#000;
-      border:none;
-      padding:0.75rem 1.5rem;
-      font-size:1rem;
-      border-radius:12px;
-      margin-top:1rem;
-      cursor:pointer;
-      box-shadow:0 0 15px #0ff;
+      color:#000; border:none; padding:0.75rem 1.5rem;
+      font-size:1rem; border-radius:12px; margin-top:1rem;
+      cursor:pointer; box-shadow:0 0 15px #0ff;
       transition:transform 0.3s, box-shadow 0.3s;
     }
     .search-btn:hover {
-      transform:translateY(-2px);
-      box-shadow:0 0 25px #0ff;
+      transform:translateY(-2px); box-shadow:0 0 25px #0ff;
     }
     #toast {
-      visibility:hidden;
-      min-width:250px;
-      background:#333;
-      color:#fff;
-      text-align:center;
-      border-radius:10px;
-      padding:1rem;
-      position:fixed;
-      z-index:999;
-      bottom:30px;
-      left:50%;
-      transform:translateX(-50%);
-      font-weight:600;
+      visibility:hidden; min-width:250px; background:#333; color:#fff;
+      text-align:center; border-radius:10px; padding:1rem;
+      position:fixed; z-index:999; bottom:30px; left:50%;
+      transform:translateX(-50%); font-weight:600;
     }
     #toast.show {
-      visibility:visible;
-      animation:fadein 0.5s, fadeout 0.5s 2.5s;
+      visibility:visible; animation:fadein 0.5s, fadeout 0.5s 2.5s;
     }
     @keyframes fadein { from{bottom:10px;opacity:0;} to{bottom:30px;opacity:1;} }
     @keyframes fadeout{ from{bottom:30px;opacity:1;} to{bottom:10px;opacity:0;} }
+    /* Results container */
+    #results { margin-top:1.5rem; text-align:left; color:#e0e0e0; }
+    #results p { background:rgba(0,255,255,0.1); padding:0.75rem; border-radius:8px; margin-bottom:0.75rem; }
   </style>
 </head>
 <body>
   <div class="navbar">
     <h1>LeadStrike AI</h1>
     <div>
-      <a href="pricing.html">Go Pro </a>
+      <a href="pricing.html">Go Pro 🚀</a>
       <a href="login.html">Logout</a>
       <a href="privacy.html">Privacy</a>
       <a href="contact.html">Contact</a>
@@ -139,28 +94,33 @@
       <h2>Welcome to Your Dashboard</h2>
       <p id="userEmail">Loading...</p>
       <p id="remainingSearches">Checking limits...</p>
-      <hr style="margin:1.5rem 0; border-color:rgba(0,255,255,0.2);" />
+      <hr style="margin:1.5rem 0;border-color:rgba(0,255,255,0.2);" />
       <input id="searchInput" placeholder="Type your search here..." onkeypress="handleEnter(event)" />
       <button class="search-btn" onclick="handleSearch()">Run Search</button>
+      <div id="results"></div>
     </div>
   </div>
 
   <div id="toast"></div>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
     import { getFirestore, doc, setDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
+    // ←←← यहाँ अपना Vercel backend URL डालें:
+    const BACKEND_URL = "https://lead-strike-ai-backend.vercel.app/";
+
+    // Toast function (वही पुराना)
     function showToast(message, color = "#333") {
       const toast = document.getElementById("toast");
       toast.style.backgroundColor = color;
       toast.innerText = message;
       toast.classList.add("show");
-      setTimeout(() => {
-        toast.classList.remove("show");
-      }, 3000);
+      setTimeout(() => toast.classList.remove("show"), 3000);
     }
 
+    // Firebase init
     const firebaseConfig = {
       apiKey: "AIzaSyDlnrYQjxEm4KuIOfpRqWGCHviHeUeysIQ",
       authDomain: "leadstrike-auth.firebaseapp.com",
@@ -170,7 +130,6 @@
       appId: "1:334418603750:web:cba9e98cb23d07a5fe9527",
       measurementId: "G-B8S3LX6LQ6"
     };
-
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
@@ -178,6 +137,7 @@
     const userEmail = document.getElementById("userEmail");
     const remainingSearches = document.getElementById("remainingSearches");
 
+    // Auth & email verify
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         if (!user.emailVerified) {
@@ -186,18 +146,11 @@
           window.location.href = "login.html";
           return;
         }
-
         const userRef = doc(db, "users", user.uid);
         const userSnap = await getDoc(userRef);
-
         if (!userSnap.exists()) {
-          await setDoc(userRef, {
-            email: user.email,
-            searchCount: 0,
-            planType: "free"
-          });
+          await setDoc(userRef, { email: user.email, searchCount: 0, planType: "free" });
         }
-
         const data = (await getDoc(userRef)).data();
         let left = data.planType === "pro" ? "Unlimited" : Math.max(0, 1 - data.searchCount);
         remainingSearches.textContent = `Remaining Searches: ${left}`;
@@ -212,63 +165,58 @@
       window.location.href = "login.html";
     }
 
+    // Updated search handler
     window.handleSearch = async function () {
-      const user = auth.currentUser;
-      if (!user) return;
-
-      const searchValue = document.getElementById("searchInput").value.trim();
-      if (!searchValue) {
+      const query = document.getElementById("searchInput").value.trim();
+      if (!query) {
         showToast("❌ Please enter a search query.", "#dc2626");
         return;
       }
-
-      const userRef = doc(db, "users", user.uid);
-      const userSnap = await getDoc(userRef);
-      const data = userSnap.data();
-
-      if (data.planType === "free" && data.searchCount >= 1) {
-        alert("Your free search is used. Upgrade to Pro.");
-        window.location.href = "pricing.html";
-        return;
-      }
-
-      await updateDoc(userRef, {
-        searchCount: (data.searchCount || 0) + 1
-      });
-
-      let left = data.planType === "pro" ? "Unlimited" : Math.max(0, 1 - (data.searchCount + 1));
-      remainingSearches.textContent = `Remaining Searches: ${left}`;
-
-      showToast(`✅ Running your search for: "${searchValue}"`, "#16a34a");
-
-      // 🔥 REAL API CALL TO BACKEND
       try {
-        const response = await fetch("https://api.leadstrike.in/api/search", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ query: searchValue })
-        });
+        // Free-tier limit check (Firebase)
+        const user = auth.currentUser;
+        const userRef = doc(db, "users", user.uid);
+        const snap = await getDoc(userRef);
+        const info = snap.data();
+        if (info.planType === "free" && info.searchCount >= 1) {
+          showToast("❌ Free search used. Upgrade to Pro.", "#dc2626");
+          window.location.href = "pricing.html";
+          return;
+        }
+        await updateDoc(userRef, { searchCount: (info.searchCount || 0) + 1 });
+        const left = info.planType === "pro" ? "Unlimited" : Math.max(0, 1 - (info.searchCount + 1));
+        remainingSearches.textContent = `Remaining Searches: ${left}`;
 
-        const result = await response.json();
-        console.log("API Response:", result); // 👉 You can display this on the page later
-        showToast("✅ Data fetched successfully!", "#10b981");
-      } catch (error) {
-        console.error("API Error:", error);
-        showToast("❌ API failed. Try again later.", "#dc2626");
+        // Backend call
+        const resp = await fetch(`${BACKEND_URL}/search`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ query })
+        });
+        const result = await resp.json();
+        if (!resp.ok) throw new Error(result.error || "Backend error");
+
+        showToast(`✅ Found ${result.results.length} results`, "#16a34a");
+
+        // Render results
+        const resultsDiv = document.getElementById("results");
+        resultsDiv.innerHTML = result.results
+          .map(r => `<p><strong>${r.name}</strong><br/>${r.email} | ${r.phone}</p>`)
+          .join("");
+      } catch (err) {
+        console.error(err);
+        showToast(`❌ ${err.message}`, "#dc2626");
       }
+    }
+
+    window.handleEnter = function (e) {
+      if (e.key === "Enter") handleSearch();
     }
 
     window.goToPricing = function () {
       window.location.href = "pricing.html";
     }
-
-    window.handleEnter = function (event) {
-      if (event.key === "Enter") {
-        handleSearch();
-      }
-    }
   </script>
 </body>
 </html>
+
