@@ -178,13 +178,13 @@
         const userRef = doc(db, "users", user.uid);
         const snap = await getDoc(userRef);
         const info = snap.data();
-        if (info.planType === "free" && info.searchCount >= 1) {
+        if (info.planType === "free" && info.searchCount >= 10) {
           showToast("❌ Free search used. Upgrade to Pro.", "#dc2626");
           window.location.href = "pricing.html";
           return;
         }
-        await updateDoc(userRef, { searchCount: (info.searchCount || 0) + 1 });
-        const left = info.planType === "pro" ? "Unlimited" : Math.max(0, 1 - (info.searchCount + 1));
+        await updateDoc(userRef, { searchCount: (info.searchCount || 0) + 10 });
+        const left = info.planType === "pro" ? "Unlimited" : Math.max(0, 10 - (info.searchCount + 1));
         remainingSearches.textContent = `Remaining Searches: ${left}`;
 
         // Backend call
