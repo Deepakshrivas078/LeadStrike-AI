@@ -142,6 +142,7 @@
       if (user) {
         if (!user.emailVerified) {
           alert("Please verify your email before accessing the dashboard.");
+          alert("Please check your spam folder if there is no mail in your inbox.");
           await signOut(auth);
           window.location.href = "login.html";
           return;
@@ -183,7 +184,7 @@
           window.location.href = "pricing.html";
           return;
         }
-        await updateDoc(userRef, { searchCount: (info.searchCount || 0) + 10 });
+        await updateDoc(userRef, { searchCount: (info.searchCount || 0) + 1 });
         const left = info.planType === "pro" ? "Unlimited" : Math.max(0, 10 - (info.searchCount + 1));
         remainingSearches.textContent = `Remaining Searches: ${left}`;
 
