@@ -1,63 +1,111 @@
+<!-- File: frontend/pages/logs.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LeadStrike Logs</title>
-  <link rel="stylesheet" href="styles.css" /> <!-- Assuming landing page CSS -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Logs | LeadStrike AI</title>
+  <link rel="stylesheet" href="../styles/style.css" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(145deg, #0f2027, #203a43, #2c5364);
+      color: #ffffff;
+      padding: 2rem;
+    }
+    .log-container {
+      max-width: 850px;
+      margin: auto;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 2rem;
+      color: #00e6e6;
+    }
+    .log-card {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 1.2rem 1.5rem;
+      margin-bottom: 1rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .log-card p {
+      margin: 0.5rem 0;
+      color: #d9ffff;
+    }
+    .log-card p strong {
+      color: #00ffff;
+    }
+    .back-btn {
+      display: block;
+      width: fit-content;
+      margin: 2rem auto 0;
+      padding: 0.6rem 1.2rem;
+      border-radius: 30px;
+      background: #00ffff;
+      color: #000;
+      text-decoration: none;
+      font-weight: 600;
+      transition: 0.3s ease;
+    }
+    .back-btn:hover {
+      background: #ffffff;
+      color: #000;
+    }
+  </style>
 </head>
-<body style="font-family: 'Segoe UI', sans-serif; background: #f5f7fa; color: #1e1e1e;">
-  <div style="max-width: 900px; margin: 50px auto; padding: 20px; background: white; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 12px;">
-    <h2 style="text-align: center; margin-bottom: 20px;">🔍 LeadStrike Logs</h2>
-    <table style="width: 100%; border-collapse: collapse;">
-      <thead>
-        <tr style="background-color: #0a84ff; color: white;">
-          <th style="padding: 10px; border: 1px solid #ddd;">Timestamp</th>
-          <th style="padding: 10px; border: 1px solid #ddd;">Query</th>
-          <th style="padding: 10px; border: 1px solid #ddd;">IP</th>
-        </tr>
-      </thead>
-      <tbody id="logTable">
-        <tr><td colspan="3" style="text-align:center; padding:20px;">Loading...</td></tr>
-      </tbody>
-    </table>
+<body>
+
+  <div class="log-container">
+    <h1>📜 User Query Logs</h1>
+    <div id="logs-list"></div>
+    <a href="../index.html" class="back-btn">← Back to Home</a>
   </div>
 
-  <script src="firebase.js"></script>
-  <script>
-    firebase.auth().onAuthStateChanged(async (user) => {
-      if (!user) {
-        window.location.href = "login.html";
-        return;
-      }
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-      try {
-        const res = await fetch('/api/getLogs');
-        const logs = await res.json();
+    const firebaseConfig = {
+      apiKey: "AIzaSyDlnrYQjxEm4KuIOfpRqWGCHviHeUeysIQ",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      databaseURL: "https://leadstrike-auth.firebaseio.com",
+      projectId: "leadstrike-auth",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "334418603750",
+      appId: "1:334418603750:web:cba9e98cb23d07a5fe9527"
+    };
 
-        const tbody = document.getElementById('logTable');
-        tbody.innerHTML = '';
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
 
-        logs.forEach(log => {
-          const row = document.createElement('tr');
-          row.innerHTML = `
-            <td style="padding: 10px; border: 1px solid #ddd;">${new Date(log.timestamp).toLocaleString()}</td>
-            <td style="padding: 10px; border: 1px solid #ddd;">${log.query}</td>
-            <td style="padding: 10px; border: 1px solid #ddd;">${log.ip || 'N/A'}</td>
+    const logsRef = ref(db, "logs");
+    const logsList = document.getElementById("logs-list");
+
+    onValue(logsRef, (snapshot) => {
+      logsList.innerHTML = "";
+      const logs = snapshot.val();
+      if (logs) {
+        const entries = Object.entries(logs).reverse(); 
+        entries.forEach(([key, log]) => {
+          const card = document.createElement("div");
+          card.className = "log-card";
+          card.innerHTML = `
+            <p><strong>Query:</strong> ${log.query || "N/A"}</p>
+            <p><strong>User:</strong> ${log.user || "Anonymous"}</p>
+            <p><strong>Time:</strong> ${new Date(log.timestamp || Date.now()).toLocaleString()}</p>
           `;
-          tbody.appendChild(row);
+          logsList.appendChild(card);
         });
-
-        if (logs.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">No logs found</td></tr>';
-        }
-      } catch (err) {
-        document.getElementById('logTable').innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">Failed to load logs</td></tr>';
-        console.error(err);
+      } else {
+        logsList.innerHTML = "<p>No logs found.</p>";
       }
     });
   </script>
+
 </body>
 </html>
