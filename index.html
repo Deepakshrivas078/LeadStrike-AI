@@ -6,91 +6,259 @@
   <title>LeadStrike AI</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: radial-gradient(circle at top left, #0f0f2d, #000); color: #e0e0e0; line-height: 1.6; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: radial-gradient(circle at top left, #050d1c, #000000);
+      color: #00ffff;
+      overflow-x: hidden;
+    }
+
     header {
       position: sticky;
       top: 0;
       z-index: 100;
+      background: rgba(0, 255, 255, 0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       padding: 1rem 2rem;
-      display: flex; justify-content: space-between; align-items: center;
-      background-color: rgba(0, 255, 255, 0.1);
       border-bottom: 1px solid #00ffff33;
+      backdrop-filter: blur(4px);
     }
-    header h2 { color: #00ffff; text-shadow: 0 0 5px #00ffff; }
-    nav a { margin-left: 1.5rem; color: #c5c5c5; text-decoration: none; font-weight: bold; transition: color 0.3s; }
-    nav a:hover { color: #00ffff; }
-    .container { max-width: 1200px; margin: auto; padding: 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; }
-    .hero-text { flex: 1 1 500px; padding: 1rem; backdrop-filter: blur(10px); background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius:16px; box-shadow: 0 0 20px rgba(0,255,255,0.2); }
-    .hero-text h1 { font-size:2.8rem; margin-bottom:1rem; color:#00ffff; text-shadow:0 0 10px #00ffff; }
-    .hero-text p { font-size:1.1rem; margin-bottom:1.5rem; color:#c5c5c5; }
+
+    header h2 {
+      font-size: 1.5rem;
+      color: #00ffff;
+      text-shadow: 0 0 12px #0ff;
+      letter-spacing: 1px;
+    }
+
+    nav a {
+      margin-left: 1.5rem;
+      color: #c5f9ff;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s ease;
+    }
+
+    nav a:hover {
+      color: #00ffff;
+      text-shadow: 0 0 8px #00ffff;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      padding: 4rem 2rem;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .hero-text {
+      flex: 1 1 500px;
+      padding: 1rem;
+    }
+
+    .hero-text h1 {
+      font-size: 3rem;
+      color: #00ffff;
+      text-shadow: 0 0 20px #00ffff;
+      margin-bottom: 1rem;
+    }
+
+    .hero-text p {
+      font-size: 1.2rem;
+      color: #b0f6ff;
+      margin-bottom: 2rem;
+    }
+
     .hero-text button {
-      padding:0.75rem 1.5rem;
-      background:linear-gradient(145deg,#00ffff,#0ff);
-      color:#000; border:none; border-radius:12px;
-      font-size:1rem; cursor:pointer;
-      box-shadow:0 0 15px #0ff;
-      transition:transform 0.3s, box-shadow 0.3s;
+      background: transparent;
+      border: 2px solid #00ffff;
+      color: #00ffff;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 0 10px #00ffff;
+      transition: 0.3s ease;
     }
-    .hero-text button:hover { transform:translateY(-3px); box-shadow:0 0 25px #0ff; }
-    .hero-image { flex:1 1 500px; padding:1rem; text-align:center; }
-    .hero-image img { max-width:100%; height:auto; border-radius:16px; border:1px solid #00ffff33; box-shadow:0 0 20px #00ffff55; }
-    .testimonials, .features, .pricing, .faq, .contact { padding:3rem 2rem; max-width:1000px; margin:auto; }
-    .testimonials h2, .features h2, .pricing h2, .faq h2, .contact h2 { color:#00ffff; text-align:center; margin-bottom:2rem; }
-    .features li { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); padding:1rem; border-radius:12px; margin-bottom:1rem; }
-    .pricing-cards { display:flex; justify-content:space-around; flex-wrap:wrap; }
+
+    .hero-text button:hover {
+      background: #00ffff;
+      color: #000;
+      box-shadow: 0 0 20px #00ffff;
+      transform: translateY(-2px);
+    }
+
+    .hero-image {
+      flex: 1 1 500px;
+      text-align: center;
+    }
+
+    .hero-image img {
+      width: 100%;
+      max-width: 400px;
+      filter: drop-shadow(0 0 15px #00ffff);
+      border-radius: 12px;
+    }
+
+    section {
+      padding: 3rem 2rem;
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 2rem;
+      color: #00ffff;
+      margin-bottom: 2rem;
+      text-shadow: 0 0 10px #00ffff;
+    }
+
+    .testimonials ul {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .testimonials li {
+      background: rgba(0, 255, 255, 0.05);
+      border: 1px solid #00ffff33;
+      border-radius: 12px;
+      padding: 1rem;
+      flex: 1 1 300px;
+      list-style: none;
+      box-shadow: 0 0 10px #00ffff22;
+    }
+
+    .features ul {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      list-style: none;
+    }
+
+    .features li {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 1rem;
+      border-radius: 12px;
+      text-shadow: 0 0 4px #00ffffaa;
+    }
+
+    .pricing-cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      justify-content: center;
+    }
+
     .pricing-card {
-      background:rgba(255,255,255,0.05);
-      border:1px solid rgba(255,255,255,0.1);
-      padding:2rem; border-radius:12px;
-      width:280px; margin:1rem; text-align:center;
+      background: rgba(0, 255, 255, 0.05);
+      border: 1px solid #00ffff33;
+      border-radius: 14px;
+      padding: 2rem;
+      width: 280px;
+      text-align: center;
+      box-shadow: 0 0 20px #00ffff22;
     }
-    .pricing-card h3 { margin-bottom:0.5rem; }
-    .pricing-card p { margin-bottom:1rem; color:#c5c5c5; }
+
+    .pricing-card p {
+      color: #c0faff;
+      margin: 0.5rem 0;
+    }
+
     .pricing-card button {
-      padding:0.75rem 1rem; background:linear-gradient(145deg,#00ffff,#0ff);
-      color:#000; border:none; border-radius:12px; font-size:1rem;
-      cursor:pointer; box-shadow:0 0 15px #0ff;
-      transition:transform 0.3s, box-shadow 0.3s;
+      margin-top: 1rem;
+      padding: 0.7rem 1.2rem;
+      border-radius: 10px;
+      border: none;
+      font-weight: bold;
+      background: #00ffff;
+      color: #000;
+      cursor: pointer;
+      transition: 0.3s ease;
+      box-shadow: 0 0 10px #00ffff;
     }
-    .pricing-card button:hover { transform:translateY(-2px); box-shadow:0 0 25px #0ff; }
-    /* FAQ accordion */
+
+    .pricing-card button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px #00ffff;
+    }
+
     .faq details {
-      background:rgba(255,255,255,0.05);
-      border:1px solid rgba(255,255,255,0.1);
-      border-radius:8px; margin-bottom:1rem; padding:0.5rem 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      padding: 0.5rem 1rem;
     }
+
     .faq summary {
-      cursor:pointer; font-weight:600; color:#c5c5c5;
+      cursor: pointer;
+      font-weight: bold;
     }
-    .faq summary:hover { color:#00ffff; }
-    .faq p { padding:0.5rem 0 0.5rem 1rem; color:#e0e0e0; }
-    .contact form input, .contact form textarea {
-      width:100%; padding:0.75rem; margin-bottom:1rem; border-radius:8px; border:1px solid #ccc;
+
+    .faq p {
+      margin-top: 0.5rem;
+      color: #c0faff;
     }
-    .contact form button {
-      background:linear-gradient(145deg,#00ffff,#0ff); border:none;
-      padding:0.75rem 1.5rem; border-radius:12px; font-weight:bold;
-      cursor:pointer; color:#000; box-shadow:0 0 15px #0ff;
-      transition:transform 0.3s, box-shadow 0.3s;
+
+    .contact input, .contact textarea {
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      border-radius: 8px;
+      border: 1px solid #00ffff33;
+      background: rgba(0, 255, 255, 0.02);
+      color: #00ffff;
     }
-    .contact form button:hover { transform:translateY(-2px); box-shadow:0 0 25px #0ff; }
+
+    .contact button {
+      background: #00ffff;
+      color: #000;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 15px #0ff;
+    }
+
     footer {
-      text-align:center; padding:2rem 1rem; color:#888; border-top:1px solid #222;
-      background:rgba(0,0,0,0.5); font-size:0.9rem;
+      text-align: center;
+      padding: 2rem 1rem;
+      background: rgba(0, 0, 0, 0.5);
+      font-size: 0.9rem;
+      color: #999;
+      border-top: 1px solid #00ffff22;
     }
-    footer p { margin-bottom:8px; }
-    footer nav a { color:#888; margin:0 12px; text-decoration:none; font-weight:600; transition:color 0.3s; }
-    footer nav a:hover { color:#00ffff; text-shadow:0 0 8px #00ffff; }
-    @media (max-width:768px) {
-      .container { flex-direction:column-reverse; text-align:center; }
-      .pricing-cards { flex-direction:column; align-items:center; }
-      footer nav a { display:inline-block; margin:8px 12px; }
+
+    footer nav a {
+      color: #999;
+      margin: 0 12px;
+      text-decoration: none;
+    }
+
+    footer nav a:hover {
+      color: #00ffff;
+      text-shadow: 0 0 8px #00ffff;
+    }
+
+    @media (max-width: 768px) {
+      .container { flex-direction: column-reverse; text-align: center; }
+      .features ul { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
   <header>
-    <h2>LeadStrike AI</h2>
+    <h2>LEADSTRIKE AI</h2>
     <nav>
       <a href="#features">Features</a>
       <a href="pricing.html">Pricing</a>
@@ -103,18 +271,18 @@
     <div class="hero-text">
       <h1>Unlock Verified Business Data Instantly</h1>
       <p>Get emails, phone numbers, LinkedIn links, websites & more with one smart search. Ask in any language!</p>
-      <button onclick="window.location.href='signup.html'">Start Free</button>
+      <button onclick="window.location.href='signup.html'">START FREE</button>
     </div>
     <div class="hero-image">
-      <img src="logo.png?text=LeadStrike+AI"/>
+      <img src="logo.png?text=LeadStrike+AI" alt="LeadStrike AI Logo" />
     </div>
   </section>
 
   <section class="testimonials">
     <h2>What Our Users Say</h2>
     <ul>
-      <li>"LeadStrike helped me close 12 clients in 3 days. Just wow!" — Neha S., Freelancer</li>
-      <li>"Within 10 mins I found verified contacts of 5 Dubai buyers!" — Ahmed K., Sales Agent</li>
+      <li>"LeadStrike helped me close 12 clients in 3 days. Just wow!" — Neha S.</li>
+      <li>"Within 10 mins I found verified contacts of 5 Dubai buyers!" — Ahmed K.</li>
     </ul>
   </section>
 
@@ -161,18 +329,9 @@
 
   <section id="faq" class="faq">
     <h2>FAQ</h2>
-    <details>
-      <summary>How accurate is the data?</summary>
-      <p>We verify data from multiple trusted sources daily.</p>
-    </details>
-    <details>
-      <summary>Can I try before buying?</summary>
-      <p>Yes, free plan offers 1 credit.</p>
-    </details>
-    <details>
-      <summary>Is the app multilingual?</summary>
-      <p>Absolutely, ask questions in any language.</p>
-    </details>
+    <details><summary>How accurate is the data?</summary><p>We verify data from multiple trusted sources daily.</p></details>
+    <details><summary>Can I try before buying?</summary><p>Yes, free plan offers 1 credit.</p></details>
+    <details><summary>Is the app multilingual?</summary><p>Absolutely, ask questions in any language.</p></details>
   </section>
 
   <section id="contact" class="contact">
