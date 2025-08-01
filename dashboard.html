@@ -93,10 +93,10 @@
     <div class="card">
       <h2>Welcome to Your Dashboard</h2>
       <p id="userEmail">Loading...</p>
-      <p id="remainingSearches">Checking limits...</p>
+      <p id="remainingcredit">Checking limits...</p>
       <hr style="margin:1.5rem 0;border-color:rgba(0,255,255,0.2);" />
-      <input id="searchInput" placeholder="Type your search here..." onkeypress="handleEnter(event)" />
-      <button class="search-btn" onclick="handleSearch()">Run Search</button>
+      <input id="searchInput" placeholder="Type your seach here..." onkeypress="handleEnter(event)" />
+      <button class="use credit-btn" onclick="handleSearch()">Run Search</button>
       <div id="results"></div>
     </div>
   </div>
@@ -135,7 +135,7 @@
     const db = getFirestore(app);
 
     const userEmail = document.getElementById("userEmail");
-    const remainingSearches = document.getElementById("remainingSearches");
+    const remainingSearches = document.getElementById("remainingcredits");
 
     // Auth & email verify
     onAuthStateChanged(auth, async (user) => {
@@ -150,11 +150,11 @@
         const userRef = doc(db, "users", user.uid);
         const userSnap = await getDoc(userRef);
         if (!userSnap.exists()) {
-          await setDoc(userRef, { email: user.email, searchCount: 0, planType: "free" });
+          await setDoc(userRef, { email: user.email, creditCount: 0, planType: "free" });
         }
         const data = (await getDoc(userRef)).data();
-        let left = data.planType === "pro" ? "Unlimited" : Math.max(0, 1 - data.searchCount);
-        remainingSearches.textContent = `Remaining Searches: ${left}`;
+        let left = data.planType === "pro" ? "Get Credits" : Math.max(0, 1 - data.creditCount);
+        remainingcredit.textContent = `Remaining Credit: ${left}`;
         userEmail.textContent = `Logged in as: ${user.email}`;
       } else {
         window.location.href = "login.html";
@@ -166,8 +166,8 @@
       window.location.href = "login.html";
     }
 
-    // Updated search handler
-    window.handleSearch = async function () {
+    // Updated credit handler
+    window.handlecredit = async function () {
       const query = document.getElementById("searchInput").value.trim();
       if (!query) {
         showToast("❌ Please enter a search query.", "#dc2626");
@@ -179,14 +179,14 @@
         const userRef = doc(db, "users", user.uid);
         const snap = await getDoc(userRef);
         const info = snap.data();
-        if (info.planType === "free" && info.searchCount >= 10) {
-          showToast("❌ Free search used. Upgrade to Pro.", "#dc2626");
+        if (info.planType === "free" && info.creditCount >= 10) {
+          showToast("❌ Free credit used. Upgrade to Pro.", "#dc2626");
           window.location.href = "pricing.html";
           return;
         }
-        await updateDoc(userRef, { searchCount: (info.searchCount || 0) + 1 });
-        const left = info.planType === "pro" ? "Unlimited" : Math.max(0, 10 - (info.searchCount + 1));
-        remainingSearches.textContent = `Remaining Searches: ${left}`;
+        await updateDoc(userRef, { creditCount: (info.creditCount || 0) + 1 });
+        const left = info.planType === "pro" ? "Get credit" : Math.max(0, 10 - (info.creditCount + 1));
+        remainingcredit.textContent = `Remaining Credit: ${left}`;
 
         // Backend call
         const resp = await fetch(`${BACKEND_URL}/search`, {
