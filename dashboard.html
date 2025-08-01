@@ -95,8 +95,8 @@
       <p id="userEmail">Loading...</p>
       <p id="remainingcredit">Checking limits...</p>
       <hr style="margin:1.5rem 0;border-color:rgba(0,255,255,0.2);" />
-      <input id="searchInput" placeholder="Type your seach here..." onkeypress="handleEnter(event)" />
-      <button class="search-btn" onclick="handleSearch()">use credit</button>
+      <input id="searchInput" placeholder="Type your search here..." onkeypress="handleEnter(event)" />
+      <button class="search-btn" onclick="handleSearch()">Use Credit</button>
       <div id="results"></div>
     </div>
   </div>
@@ -108,10 +108,9 @@
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
     import { getFirestore, doc, setDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
-    // ←←← यहाँ अपना Vercel backend URL डालें:
     const BACKEND_URL = "https://lead-strike-ai-backend.vercel.app/";
 
-    // Toast function (वही पुराना)
+    // Toast function
     function showToast(message, color = "#333") {
       const toast = document.getElementById("toast");
       toast.style.backgroundColor = color;
@@ -135,14 +134,12 @@
     const db = getFirestore(app);
 
     const userEmail = document.getElementById("userEmail");
-    const remainingSearches = document.getElementById("remainingcredits");
+    const remainingCredit = document.getElementById("remainingcredit");
 
-    // Auth & email verify
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         if (!user.emailVerified) {
           alert("Please verify your email before accessing the dashboard.");
-          alert("Please check your spam folder if there is no mail in your inbox.");
           await signOut(auth);
           window.location.href = "login.html";
           return;
@@ -153,8 +150,13 @@
           await setDoc(userRef, { email: user.email, creditCount: 0, planType: "free" });
         }
         const data = (await getDoc(userRef)).data();
-        let left = data.planType === "pro" ? "Get Credits" : Math.max(0, 1 - data.creditCount);
-        remainingcredit.textContent = `Remaining Credit: ${left}`;
+        let left;
+        if (data.planType === "pro") {
+          left = "Unlimited";
+        } else {
+          left = Math.max(0, 10 - data.creditCount);
+        }
+        remainingCredit.textContent = `Remaining Credit: ${left}`;
         userEmail.textContent = `Logged in as: ${user.email}`;
       } else {
         window.location.href = "login.html";
@@ -164,29 +166,33 @@
     window.logout = async function () {
       await signOut(auth);
       window.location.href = "login.html";
-    }
+    };
 
-    // Updated credit handler
-    window.handlecredit = async function () {
+    window.handleSearch = async function () {
       const query = document.getElementById("searchInput").value.trim();
       if (!query) {
         showToast("❌ Please enter a search query.", "#dc2626");
         return;
       }
       try {
-        // Free-tier limit check (Firebase)
         const user = auth.currentUser;
         const userRef = doc(db, "users", user.uid);
         const snap = await getDoc(userRef);
         const info = snap.data();
+
         if (info.planType === "free" && info.creditCount >= 10) {
-          showToast("❌ Free credit used. Upgrade to Pro.", "#dc2626");
+          showToast("❌ Free credits used. Upgrade to Pro.", "#dc2626");
           window.location.href = "pricing.html";
           return;
         }
-        await updateDoc(userRef, { creditCount: (info.creditCount || 0) + 1 });
-        const left = info.planType === "pro" ? "Get credit" : Math.max(0, 10 - (info.creditCount + 1));
-        remainingcredit.textContent = `Remaining Credit: ${left}`;
+
+        // increment creditCount
+        const newCount = (info.creditCount || 0) + 1;
+        await updateDoc(userRef, { creditCount: newCount });
+
+        // update UI
+        const rem = info.planType === "pro" ? "Unlimited" : Math.max(0, 10 - newCount);
+        remainingCredit.textContent = `Remaining Credit: ${rem}`;
 
         // Backend call
         const resp = await fetch(`${BACKEND_URL}/search`, {
@@ -208,16 +214,13 @@
         console.error(err);
         showToast(`❌ ${err.message}`, "#dc2626");
       }
-    }
+    };
 
     window.handleEnter = function (e) {
-      if (e.key === "Enter") handleSearch();
-    }
-
-    window.goToPricing = function () {
-      window.location.href = "pricing.html";
-    }
+      if (e.key === "Enter") window.handleSearch();
+    };
   </script>
 </body>
 </html>
+
 
